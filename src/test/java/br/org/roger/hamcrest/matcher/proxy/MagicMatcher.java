@@ -10,14 +10,12 @@ import java.util.Map.Entry;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import br.org.roger.model.Person;
-
 /**
  * 
  * @author Roger
  *
  */
-public class MagicMatcher implements InvocationHandler {
+public class MagicMatcher <T> implements InvocationHandler {
 	
 	private ResultDescription resultDescription;
 	private Map<String, Object> methodMap;
@@ -33,7 +31,7 @@ public class MagicMatcher implements InvocationHandler {
 			
 			for (Entry<String, Object> entry : methodMap.entrySet()) {
 				String field = entry.getKey().substring(entry.getKey().indexOf("with") + 4);
-				Object objectValue = extractObjectValue((Person) args[0], entry.getKey());
+				Object objectValue = extractObjectValue((T) args[0], entry.getKey());
 				if (!(entry.getValue() instanceof Matcher)) {
 					resultDescription.addExpectedDescription(field, objectValue);
 					if (!entry.getValue().equals(objectValue)) {
@@ -69,11 +67,11 @@ public class MagicMatcher implements InvocationHandler {
 		}
 	}
 
-	protected Object extractObjectValue(Person matchPerson, String entryKey)
+	protected Object extractObjectValue(T matchEntity, String entryKey)
 			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		String methodName = entryKey.replace("with", "get");
-		Method personMethod = matchPerson.getClass().getMethod(methodName, (Class<?>[]) null);
-		return personMethod.invoke(matchPerson);
+		Method personMethod = matchEntity.getClass().getMethod(methodName, (Class<?>[]) null);
+		return personMethod.invoke(matchEntity);
 	}
 	
 	class ResultDescription {

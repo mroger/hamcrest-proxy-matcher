@@ -5,7 +5,7 @@ import java.lang.reflect.Proxy;
 public class MatcherFactory <T> {
 	
 	public static <T> T proxying(Class<T> clazz) {
-		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new MagicMatcher());
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new MagicMatcher<T>());
 	}
 	
 	public static <T> T aProxy(Class<T> clazz) {
